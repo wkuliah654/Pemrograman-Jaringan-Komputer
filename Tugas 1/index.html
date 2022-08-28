@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<input type="text" id="user" placeholder="Username">
+	<input type="password" id="pass" placeholder="Password">
+	<button onclick="send()">Login</button>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		var socket = io()
+
+		function send() {
+			socket.emit('send', {
+				text: document.getElementById('user').value + "\n" + document.getElementById('pass').value
+			})
+		}
+	</script>
+
+</body>
+</html>
