@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<section>
+		<div>
+			<div>
+				<div>
+					<label>Username</label>
+					<input type="text" id="user" class="" placeholder="Username">
+				</div>
+				<div>
+					<label>Password</label>
+					<input type="password" id="pass" class="" placeholder="Password">
+				</div>
+				<div>
+					<button onclick="send()">Login</button>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		var socket = io();
+
+		function isChar(ch) {
+			let db = "qwertyuiopasdfghjklzxcvbnm";
+			for (let i = 0; i < db.length; i++) {
+				if (ch.toLowerCase() == db[i]) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		function isSym(ch) {
+			let db = " `'!”?$?%^&*()_–+={[}]:;@‘~#|<,>.?/";
+			for (let i = 0; i < db.length; i++) {
+				if (ch.toLowerCase() == db[i]) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		function read(pkg) {
+			let tmp = pkg;
+			let data = ["",""];
+			let a = 0;
+
+			do {
+				let loop = true;
+				let num = 0;
+
+				do {
+					num = (num * 10) + parseInt(pkg[0]);
+					pkg = pkg.replace(pkg[0], '');
+
+					if (isChar(pkg[0]) || isSym(pkg[0])) {
+						loop = false;
+					} else {
+						let temp = (num * 10) + parseInt(pkg[0]);
+
+						if (temp > tmp.length) {
+							loop = false;
+						}
+					}
+				} while(loop);
+
+				for (let i = 0; i < num; i++) {
+					data[a] += pkg[i];
+				}
+				pkg = pkg.replace(data[a], '');
+
+				a++;
+			} while(a < 2);
+
+			return [data[0], data[1]];
+		}
+
+		function send() {
+			let user = document.getElementById('user').value;
+			let pass = document.getElementById('pass').value;
+
+			let pkg = user.length + user + pass.length + pass;
+
+			let data = read(pkg);
+			
+			// send data package to server
+			socket.emit('send', {
+				key: "Package",
+				value: pkg
+			});
+
+			// send username to server
+			socket.emit('recive', {
+				key: "Username",
+				value: data[0]
+			});
+
+			// send password to server
+			socket.emit('recive', {
+				key: "Password",
+				value: data[1]
+			});
+		}
+	</script>
+
+</body>
+</html>
