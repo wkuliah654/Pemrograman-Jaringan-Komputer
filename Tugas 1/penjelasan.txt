@@ -1,0 +1,7 @@
+dalam 1 paket pengiriman data menggunakan pemisah enter (\n)
+mengapa saya memilih karakter enter? 
+karena enter merupakan karakter yang tidak dapat di pakai dalam pembuatan username atau password
+
+pada kode yang saya buat, karakter enter di pisah dalam bentuk kode ascii
+saat pengiriman ke server, server akan mencari karakter enter dan memisahkan kedua data yang sudah di kirimkan
+lalu menampilkannya satu persatu
