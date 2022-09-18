@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<input type="text" id="user" placeholder="Username">
+	<input type="password" id="pass" placeholder="Password">
+	<button onclick="send()">Login</button>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		var socket = io()
+
+		function send() {
+			let username = document.getElementById('user').value
+			let password = document.getElementById('pass').value
+
+			if (Number.isInteger(username)) { username = String(username) }
+			if (Number.isInteger(password)) { password = String(password) }
+
+			socket.emit('send', {
+				user: document.getElementById('user').value,
+				pass: document.getElementById('pass').value
+			})
+
+			socket.emit('request')
+		}
+	</script>
+
+</body>
+</html>
